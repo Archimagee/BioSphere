@@ -28,4 +28,14 @@ public class BaseRecipe : ScriptableObject
         return recipeID;
     }
 
+    public void GetInputItems()
+    {
+
+    }
+
+    public void GetOutputItems()
+    {
+
+    }
+
 }
