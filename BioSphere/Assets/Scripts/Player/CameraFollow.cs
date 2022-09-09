@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraSmoothFollow : MonoBehaviour
+public class CameraFollow : MonoBehaviour
 {
 
     [SerializeField]
