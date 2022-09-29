@@ -9,7 +9,26 @@ public enum InventoryType
 
 public class SimpleInventory : MonoBehaviour
 {
+    public BaseItem testItem;
+
+    [SerializeField]
+    private int columns;
+    [SerializeField]
+    private Vector3 baseOffset;
+    [SerializeField]
+    private float columnOffset;
+    [SerializeField]
+    private float rowOffset;
+
+    [SerializeField]
     private List<SimpleInventorySlot> inventoryList = new List<SimpleInventorySlot>();
+
+    [SerializeField]
+    private GameObject slotParent;
+    [SerializeField]
+    private GameObject emptyPrefab;
+    [SerializeField]
+    private Canvas canvas;
 
     [SerializeField]
     private int size;
@@ -30,11 +49,11 @@ public class SimpleInventory : MonoBehaviour
         return inventoryList[slot];
     }
 
-    public void Start()
+    public void Awake()
     {
-        for (int x = 0; x > size; x++)
+        for (int x = 0; x < size; x++)
         {
-            inventoryList[x] = new SimpleInventorySlot();
+            inventoryList.Add(new SimpleInventorySlot());
         }
     }
 
@@ -128,6 +147,33 @@ public class SimpleInventory : MonoBehaviour
 
     public void RefreshDisplay()
     {
+        for (int x = 0; x < size; x++)
+        {
+            if (!inventoryList[x].IsEmpty())
+            {
+                Vector3 pos = new Vector3();
+                pos.y = (Mathf.Ceil(x / columns)) * rowOffset;
+                pos.x = (x % columns) * columnOffset;
+                inventoryList[x].InstantiateItem(slotParent, pos);
+            }
+        }
+    }
 
+    public void RefreshSlot(int slot)
+    {
+
+    }
+
+    public void ToggleInventory()
+    {
+        if(canvas.enabled)
+        {
+            canvas.enabled = false;
+        }
+        else
+        {
+            canvas.enabled = true;
+            RefreshDisplay();
+        }
     }
 }

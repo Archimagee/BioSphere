@@ -2,9 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class SimpleInventorySlot
 {
-    private BaseItem item;
+    private GameObject obj;
+    public GameObject GetObj()
+    {
+        return obj;
+    }
+
+    [SerializeField]
+    private BaseItem item = null;
     public BaseItem GetItem()
     {
         return item;
@@ -14,6 +22,7 @@ public class SimpleInventorySlot
         item = _item;
     }
 
+    [SerializeField]
     private int count;
     public int GetCount()
     {
@@ -31,7 +40,7 @@ public class SimpleInventorySlot
 
     public bool IsEmpty()
     {
-        if (item != null)
+        if (item == null)
         {
             return true;
         }
@@ -41,12 +50,25 @@ public class SimpleInventorySlot
         }
     }
 
+
+    public void InstantiateItem(GameObject slotParent, Vector3 pos)
+    {
+        if (obj != null)
+        {
+            UnityEngine.Object.Destroy(obj);
+        }
+
+        GetItem().InstantiateInventoryItem(slotParent.transform, pos);
+    }
+
+
     public int RemoveAll()
     {
         // returns the number of items removed
         int removed = count;
 
         item = null;
+        UnityEngine.Object.Destroy(obj);
         SetCount(0);
 
         return removed;

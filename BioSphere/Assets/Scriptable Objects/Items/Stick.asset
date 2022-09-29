@@ -15,5 +15,5 @@ MonoBehaviour:
   itemID: 1
   description: A stick, useful for making things
   name: Stick
-  inventoryPrefab: {fileID: 0}
+  inventoryPrefab: {fileID: 5011265542232474211, guid: 583fdc9eddca8f8459869b54aebc8bff, type: 3}
   worldPrefab: {fileID: 0}

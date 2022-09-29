@@ -51,11 +51,10 @@ public abstract class BaseItem : ScriptableObject
 
 
     [SerializeField] private GameObject inventoryPrefab;
-    public GameObject InstantiateInventoryItem(int _count, Transform _parent)
+    public GameObject InstantiateInventoryItem(Transform _parent, Vector3 pos)
     {
-        GameObject gameObject = Instantiate(inventoryPrefab, _parent);
+        GameObject gameObject = Instantiate(inventoryPrefab, pos, Quaternion.identity, _parent);
         return gameObject;
-
     }
 
 
