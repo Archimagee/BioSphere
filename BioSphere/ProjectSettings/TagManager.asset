@@ -15,9 +15,9 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - Player
+  - World Objects
+  - Ground
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 25843959
+    locked: 0
+  - name: Player
+    uniqueID: 2485505859
     locked: 0

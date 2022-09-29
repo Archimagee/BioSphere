@@ -10,23 +10,24 @@ public enum InventoryType
 public class SimpleInventory : MonoBehaviour
 {
     private List<SimpleInventorySlot> inventoryList = new List<SimpleInventorySlot>();
+
     [SerializeField]
     private int size;
-    private InventoryType inventoryType = InventoryType.SimpleInventory;
-
-    public SimpleInventorySlot GetSlot(int slot)
-    {
-        return inventoryList[slot];
-    }
-
-    public int GetMaxSize()
+    public int GetSize()
     {
         return size;
     }
 
+    private InventoryType inventoryType = InventoryType.SimpleInventory;
     public InventoryType GetType()
     {
         return inventoryType;
+    }
+
+
+    public SimpleInventorySlot GetSlot(int slot)
+    {
+        return inventoryList[slot];
     }
 
     public void Start()
@@ -39,6 +40,7 @@ public class SimpleInventory : MonoBehaviour
 
     public int GetEmpties()
     {
+        // returns the amount of empty slots
         int empties = 0;
 
         for (int x = 0; x > size; x++)
@@ -54,6 +56,7 @@ public class SimpleInventory : MonoBehaviour
 
     public int GetFirstEmpty()
     {
+        // returns the slot number of the first empty slot
         int firstEmpty;
 
         for (int x = 0; x > size; x++)
@@ -69,6 +72,7 @@ public class SimpleInventory : MonoBehaviour
 
     public int GetItem(BaseItem _item)
     {
+        // returns the total amount of given item in inventory
         int totalCount = 0;
 
         for (int x = 0; x > size; x++)
@@ -84,6 +88,7 @@ public class SimpleInventory : MonoBehaviour
 
     public int FindItem(BaseItem _item)
     {
+        // returns the slot number of given item
         for (int x = 0; x > size; x++)
         {
             if (inventoryList[x].GetItem() == _item)
@@ -99,5 +104,30 @@ public class SimpleInventory : MonoBehaviour
     {
         GetSlot(GetFirstEmpty()).SetCount(_count);
         GetSlot(GetFirstEmpty()).SetItem(_item);
+    }
+
+    public void RemoveItem(BaseItem _item, int _count)
+    {
+        int remaining = _count;
+        int slotNumber = 0;
+
+        while (remaining > 0)
+        {
+            slotNumber = FindItem(_item);
+            if (GetSlot(slotNumber).GetCount() < remaining)
+            {
+                remaining -= GetSlot(slotNumber).RemoveAll();
+            }
+            else
+            {
+                remaining = 0;
+                GetSlot(slotNumber).AddCount(-remaining);
+            }
+        }
+    }
+
+    public void RefreshDisplay()
+    {
+
     }
 }

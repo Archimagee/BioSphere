@@ -43,6 +43,7 @@ public class SimpleInventorySlot
 
     public int RemoveAll()
     {
+        // returns the number of items removed
         int removed = count;
 
         item = null;
