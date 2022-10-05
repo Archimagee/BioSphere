@@ -4,39 +4,37 @@ using UnityEngine;
 
 public enum InventoryType
 {
-    SimpleInventory
+    SimpleInventory,
+    PlayerHotbarInventory
 }
 
 public class SimpleInventory : MonoBehaviour
 {
     [SerializeField]
-    private int columns;
+    protected int columns;
     [SerializeField]
-    private Vector3 basePos;
+    protected Vector3 basePos;
     [SerializeField]
-    private float columnOffset;
+    protected float columnOffset;
     [SerializeField]
-    private float rowOffset;
+    protected float rowOffset;
 
     [SerializeField]
-    private List<SimpleInventorySlot> inventoryList = new List<SimpleInventorySlot>();
+    protected List<SimpleInventorySlot> inventoryList = new List<SimpleInventorySlot>();
 
     [SerializeField]
-    private GameObject slotParent;
+    protected GameObject slotParent;
     [SerializeField]
-    private GameObject emptyPrefab;
+    protected GameObject emptyPrefab;
 
     [SerializeField]
-    private Canvas canvas;
-
-    [SerializeField]
-    private int size;
+    protected int size;
     public int GetSize()
     {
         return size;
     }
 
-    private InventoryType inventoryType = InventoryType.SimpleInventory;
+    protected InventoryType inventoryType = InventoryType.SimpleInventory;
     public InventoryType GetInventoryType()
     {
         return inventoryType;
@@ -48,22 +46,8 @@ public class SimpleInventory : MonoBehaviour
         return inventoryList[slot];
     }
 
-    public void Awake()
+    virtual public void Awake()
     {
-        if (canvas == null)
-        {
-            canvas = this.GetComponent<Canvas>();
-
-            if (canvas == null)
-            {
-                Debug.LogWarning("Canvas not assigned to " + this + "\n Could not find canvas to assign");
-            }
-            else
-            {
-                Debug.Log("Canvas not assigned to " + this + "\n Found canvas on self to assign");
-            }
-        }
-
         if (slotParent == null)
         {
             Debug.LogWarning("slotParent not assigned to " + this + "\n Assigning to self");
@@ -179,13 +163,9 @@ public class SimpleInventory : MonoBehaviour
     {
         for (int x = 0; x < size; x++)
         {
-            if (!inventoryList[x].IsEmpty())
+            if (inventoryList[x].GetItem() != inventoryList[x].GetDisplayedItem())
             {
-                if (inventoryList[x].GetObjImage() != inventoryList[x].GetItem().GetImage())
-                {
-                    inventoryList[x].InstantiateItem(slotParent, GetPos(x));
-                }
-
+                inventoryList[x].RefreshSlot(slotParent, GetPos(x));
                 inventoryList[x].RefreshCount();
             }
         }
@@ -193,19 +173,6 @@ public class SimpleInventory : MonoBehaviour
 
     public void RefreshSlot(int slot)
     {
-
-    }
-
-    public void ToggleInventory()
-    {
-        if(canvas.enabled)
-        {
-            canvas.enabled = false;
-        }
-        else
-        {
-            canvas.enabled = true;
-            RefreshDisplay();
-        }
+        inventoryList[slot].RefreshSlot(slotParent, GetPos(slot));
     }
 }

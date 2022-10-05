@@ -30,6 +30,12 @@ public class SimpleInventorySlot
         item = _item;
     }
 
+    private BaseItem displayedItem;
+    public BaseItem GetDisplayedItem()
+    {
+        return displayedItem;
+    }
+
     [SerializeField]
     private int count;
     public int GetCount()
@@ -65,19 +71,28 @@ public class SimpleInventorySlot
     }
 
 
-    public void InstantiateItem(GameObject slotParent, Vector3 pos)
+    public void RefreshSlot(GameObject slotParent, Vector3 pos)
     {
-        if (obj != null)
+        if (displayedItem != null)
         {
             UnityEngine.Object.Destroy(obj);
         }
 
-        obj = Object.Instantiate(emptyPrefab, pos, Quaternion.identity, slotParent.transform);
-
-        if (GetItem().GetImage() != null)
+        if (item != null)
         {
-            objImage = GetItem().GetImage();
-            obj.GetComponent<Image>().sprite = GetItem().GetImage();
+            obj = Object.Instantiate(emptyPrefab, pos, Quaternion.identity, slotParent.transform);
+
+            if (GetItem().GetImage() != null)
+            {
+                objImage = GetItem().GetImage();
+                obj.GetComponent<Image>().sprite = GetItem().GetImage();
+            }
+
+            displayedItem = item;
+        }
+        else
+        {
+            displayedItem = null;
         }
 
         RefreshCount();
@@ -96,6 +111,7 @@ public class SimpleInventorySlot
         int removed = count;
 
         item = null;
+        displayedItem = null;
         UnityEngine.Object.Destroy(obj);
         SetCount(0);
 
