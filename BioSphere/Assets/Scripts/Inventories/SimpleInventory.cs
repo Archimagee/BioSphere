@@ -9,12 +9,10 @@ public enum InventoryType
 
 public class SimpleInventory : MonoBehaviour
 {
-    public BaseItem testItem;
-
     [SerializeField]
     private int columns;
     [SerializeField]
-    private Vector3 baseOffset;
+    private Vector3 basePos;
     [SerializeField]
     private float columnOffset;
     [SerializeField]
@@ -27,6 +25,7 @@ public class SimpleInventory : MonoBehaviour
     private GameObject slotParent;
     [SerializeField]
     private GameObject emptyPrefab;
+
     [SerializeField]
     private Canvas canvas;
 
@@ -38,7 +37,7 @@ public class SimpleInventory : MonoBehaviour
     }
 
     private InventoryType inventoryType = InventoryType.SimpleInventory;
-    public InventoryType GetType()
+    public InventoryType GetInventoryType()
     {
         return inventoryType;
     }
@@ -51,9 +50,32 @@ public class SimpleInventory : MonoBehaviour
 
     public void Awake()
     {
+        if (canvas == null)
+        {
+            canvas = this.GetComponent<Canvas>();
+
+            if (canvas == null)
+            {
+                Debug.LogWarning("Canvas not assigned to " + this + "\n Could not find canvas to assign");
+            }
+            else
+            {
+                Debug.Log("Canvas not assigned to " + this + "\n Found canvas on self to assign");
+            }
+        }
+
+        if (slotParent == null)
+        {
+            Debug.LogWarning("slotParent not assigned to " + this + "\n Assigning to self");
+            slotParent = this.gameObject;
+        }
+
         for (int x = 0; x < size; x++)
         {
-            inventoryList.Add(new SimpleInventorySlot());
+            SimpleInventorySlot newSlot = new SimpleInventorySlot();
+            inventoryList.Add(newSlot);
+            newSlot.SetEmptyPrefab(emptyPrefab);
+            Debug.Log("Initialised inventory " + this + " with " + size + " slots");
         }
     }
 
@@ -76,8 +98,6 @@ public class SimpleInventory : MonoBehaviour
     public int GetFirstEmpty()
     {
         // returns the slot number of the first empty slot
-        int firstEmpty;
-
         for (int x = 0; x > size; x++)
         {
             if (inventoryList[x].IsEmpty())
@@ -121,8 +141,10 @@ public class SimpleInventory : MonoBehaviour
 
     public void AddItem(BaseItem _item, int _count)
     {
-        GetSlot(GetFirstEmpty()).SetCount(_count);
-        GetSlot(GetFirstEmpty()).SetItem(_item);
+        int firstEmpty = GetFirstEmpty();
+        GetSlot(firstEmpty).SetCount(_count);
+        GetSlot(firstEmpty).SetItem(_item);
+        RefreshSlot(firstEmpty);
     }
 
     public void RemoveItem(BaseItem _item, int _count)
@@ -145,16 +167,26 @@ public class SimpleInventory : MonoBehaviour
         }
     }
 
+    public Vector3 GetPos(int slot)
+    {
+        Vector3 pos = basePos;
+        pos.y += (Mathf.Ceil(slot / columns)) * rowOffset;
+        pos.x += (slot % columns) * columnOffset;
+        return pos;
+    }
+
     public void RefreshDisplay()
     {
         for (int x = 0; x < size; x++)
         {
             if (!inventoryList[x].IsEmpty())
             {
-                Vector3 pos = new Vector3();
-                pos.y = (Mathf.Ceil(x / columns)) * rowOffset;
-                pos.x = (x % columns) * columnOffset;
-                inventoryList[x].InstantiateItem(slotParent, pos);
+                if (inventoryList[x].GetObjImage() != inventoryList[x].GetItem().GetImage())
+                {
+                    inventoryList[x].InstantiateItem(slotParent, GetPos(x));
+                }
+
+                inventoryList[x].RefreshCount();
             }
         }
     }

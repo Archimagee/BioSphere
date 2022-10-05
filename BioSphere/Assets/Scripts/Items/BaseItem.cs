@@ -8,6 +8,7 @@ public enum ItemCategory
 {
     SimpleItem,
     WeaponItem,
+    ToolItem,
     ArmourItem,
     FoodItem,
     PlaceableItem
@@ -17,8 +18,6 @@ public enum ItemCategory
 
 public abstract class BaseItem : ScriptableObject
 {
-
-
     private ItemCategory category;
     protected void SetCategory(ItemCategory _category)
     {
@@ -27,6 +26,20 @@ public abstract class BaseItem : ScriptableObject
     public ItemCategory GetCategory()
     {
         return category;
+    }
+
+    [SerializeField]
+    private Sprite itemImage;
+    public Sprite GetImage()
+    {
+        return itemImage;
+    }
+
+    [SerializeField]
+    private int stackSize;
+    public int GetStackSize()
+    {
+        return stackSize;
     }
 
 
@@ -43,35 +56,27 @@ public abstract class BaseItem : ScriptableObject
         return description;
     }
 
-    [SerializeField] private string name;
+    [SerializeField] private new string name;
     public string GetName()
     {
         return name;
     }
 
 
-    [SerializeField] private GameObject inventoryPrefab;
-    public GameObject InstantiateInventoryItem(Transform _parent, Vector3 pos)
+
+    public void Awake()
     {
-        GameObject gameObject = Instantiate(inventoryPrefab, pos, Quaternion.identity, _parent);
-        return gameObject;
+        if (stackSize == 0)
+        {
+            Debug.LogWarning("Stack size is 0 for " + this);
+        }
+
+        if (itemImage == null)
+        {
+            Debug.LogWarning("Image not set for " + this);
+        }
     }
 
 
-    [SerializeField] private GameObject worldPrefab;
-    public GameObject InstantiateDroppedItem(int _count, Vector3 _position)
-    {
-        GameObject gameObject = Instantiate(worldPrefab, _position, Quaternion.identity);
-        return gameObject;
-    }
-
-
-
-
-    public void StartDrag()
-    {
-
-    }
-
-
+    abstract public void Use(Vector3 pos, Vector3 playerPos);
 }

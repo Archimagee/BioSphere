@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d53f03d293576324db75a1ffd1201782, type: 3}
   m_Name: Stick
   m_EditorClassIdentifier: 
+  itemImage: {fileID: 21300000, guid: c4a79e6f62223b245a3ec4578e84cdaf, type: 3}
+  stackSize: 100
   itemID: 1
   description: A stick, useful for making things
   name: Stick

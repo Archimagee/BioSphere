@@ -8,9 +8,14 @@ using UnityEngine;
 public class SimpleItem : BaseItem
 {
 
-    private void Awake()
+    new public void Awake()
     {
         SetCategory(ItemCategory.SimpleItem);
     }
 
+
+    override public void Use(Vector3 pos, Vector3 playerPos)
+    {
+
+    }
 }

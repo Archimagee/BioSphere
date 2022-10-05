@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 [System.Serializable]
 public class SimpleInventorySlot
@@ -9,6 +11,12 @@ public class SimpleInventorySlot
     public GameObject GetObj()
     {
         return obj;
+    }
+
+    private Sprite objImage;
+    public Sprite GetObjImage()
+    {
+        return objImage;
     }
 
     [SerializeField]
@@ -37,6 +45,12 @@ public class SimpleInventorySlot
         count = _count;
     }
 
+    private GameObject emptyPrefab;
+    public void SetEmptyPrefab(GameObject _emptyPrefab)
+    {
+        emptyPrefab = _emptyPrefab;
+    }
+
 
     public bool IsEmpty()
     {
@@ -58,7 +72,21 @@ public class SimpleInventorySlot
             UnityEngine.Object.Destroy(obj);
         }
 
-        GetItem().InstantiateInventoryItem(slotParent.transform, pos);
+        obj = Object.Instantiate(emptyPrefab, pos, Quaternion.identity, slotParent.transform);
+
+        if (GetItem().GetImage() != null)
+        {
+            objImage = GetItem().GetImage();
+            obj.GetComponent<Image>().sprite = GetItem().GetImage();
+        }
+
+        RefreshCount();
+    }
+
+
+    public void RefreshCount()
+    {
+        obj.GetComponentInChildren<TextMeshProUGUI>().text = count.ToString();
     }
 
 

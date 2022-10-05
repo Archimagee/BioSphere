@@ -39,7 +39,7 @@ public class SimpleRecipe : ScriptableObject
     }
 
     private RecipeType recipeType = RecipeType.SimpleRecipe;
-    public RecipeType GetType()
+    public RecipeType GetRecipeType()
     {
         return recipeType;
     }
